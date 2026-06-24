@@ -1,0 +1,6 @@
+{
+  "name": "Mason & Hope Co. Planner",
+  "description": "Home education dashboard and family planner tracking learning goals, logs, budgets, and reporting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

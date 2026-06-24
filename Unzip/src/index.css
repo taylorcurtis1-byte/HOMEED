@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,900;1,400&family=Inter:wght@300;400;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary-green: #6A7152;
+  --color-primary-green-dark: #50563b;
+  --color-primary-orange: #C25934;
+  --color-primary-gold: #EAB242;
+  --color-base-bg: #F6F4EE;
+  --color-base-border: rgba(74, 51, 32, 0.15);
+  --color-base-text: #4A3320;
+  --color-base-sidebar: transparent;
+  
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-base-bg);
+  color: var(--color-base-text);
+}
+
+.card {
+  border-radius: 0;
+  border: 1px solid var(--color-base-border);
+  box-shadow: none;
+}
+
+button {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+}
+
+input, select, textarea {
+  border-radius: 0 !important;
+  font-family: var(--font-sans);
+}
+
+.kerning-wide { letter-spacing: 0.2em; }
+.line-tight { line-height: 0.85; }
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; border-left: 1px solid var(--color-base-border); }
+::-webkit-scrollbar-thumb { background: rgba(26, 26, 26, 0.2); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: rgba(26, 26, 26, 0.4); }
