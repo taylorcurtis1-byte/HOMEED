@@ -28,6 +28,8 @@ interface AppDataContextType {
   wipeData: () => void;
   exportData: () => void;
   exportPDF: () => void;
+  exportJSON: () => void;
+  importJSON: (jsonData: string) => void;
 }
 
 const AppDataContext = createContext<AppDataContextType | undefined>(undefined);
@@ -281,11 +283,56 @@ export const AppDataProvider = ({ children }: { children: ReactNode }) => {
     printWindow.document.close();
   };
 
+  const exportJSON = () => {
+    const data = {
+      settings,
+      tasks,
+      dailyTasks,
+      dailyNotes,
+      dailyNotesMap,
+      students,
+      hourlyLogs,
+      logEntries,
+      reportData,
+      budgetItems,
+      wellbeingEntries
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `HomeEd_Backup_Data_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importJSON = (jsonData: string) => {
+    try {
+      const parsed = JSON.parse(jsonData);
+      if (parsed.settings) setSettings(parsed.settings);
+      if (parsed.tasks) setTasks(parsed.tasks);
+      if (parsed.dailyTasks) setDailyTasks(parsed.dailyTasks);
+      if (parsed.dailyNotes !== undefined) setDailyNotes(parsed.dailyNotes);
+      if (parsed.dailyNotesMap) setDailyNotesMap(parsed.dailyNotesMap);
+      if (parsed.students) setStudents(parsed.students);
+      if (parsed.hourlyLogs) setHourlyLogs(parsed.hourlyLogs);
+      if (parsed.logEntries) setLogEntries(parsed.logEntries);
+      if (parsed.reportData) setReportData(parsed.reportData);
+      if (parsed.budgetItems) setBudgetItems(parsed.budgetItems);
+      if (parsed.wellbeingEntries) setWellbeingEntries(parsed.wellbeingEntries);
+      alert('Data imported successfully! The page will now reload to apply changes.');
+      window.location.reload();
+    } catch (e) {
+      alert('Failed to import data. Please ensure the file is a valid JSON backup.');
+      console.error(e);
+    }
+  };
+
   return (
     <AppDataContext.Provider value={{
       settings, setSettings, tasks, setTasks, dailyTasks, setDailyTasks, dailyNotes, setDailyNotes, dailyNotesMap, setDailyNotesMap,
       students, setStudents, hourlyLogs, setHourlyLogs, logEntries, setLogEntries,
-      reportData, setReportData, budgetItems, setBudgetItems, wellbeingEntries, setWellbeingEntries, wipeData, exportData, exportPDF
+      reportData, setReportData, budgetItems, setBudgetItems, wellbeingEntries, setWellbeingEntries, wipeData, exportData, exportPDF, exportJSON, importJSON
     }}>
       {children}
     </AppDataContext.Provider>
