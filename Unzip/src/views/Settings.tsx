@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useAppData } from '../context/AppDataContext';
-import { Download, AlertTriangle, Printer } from 'lucide-react';
+import { Download, AlertTriangle, Printer, Upload } from 'lucide-react';
 
 export default function Settings() {
-  const { settings, setSettings, wipeData, exportData, exportPDF } = useAppData();
+  const { settings, setSettings, wipeData, exportData, exportPDF, exportJSON, importJSON } = useAppData();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      importJSON(content);
+    };
+    reader.readAsText(file);
+    // reset input so same file can be uploaded again if needed
+    e.target.value = '';
+  };
 
   return (
     <div className="animate-in fade-in duration-300">
@@ -38,8 +53,8 @@ export default function Settings() {
 
           <div className="card p-5 space-y-3 flex flex-col justify-between rounded-none shadow-none border border-[#4A3320]/20 bg-[#F6F4EE]">
             <div>
-              <h3 className="font-serif font-bold text-base text-[#4A3320] flex items-center gap-2">Data Backup</h3>
-              <p className="text-xs text-[#4A3320]/70 leading-normal mt-1">Download all your records, daily logs, wellbeing entries, and student profiles to keep them safe.</p>
+              <h3 className="font-serif font-bold text-base text-[#4A3320] flex items-center gap-2">Data Management & Backup</h3>
+              <p className="text-xs text-[#4A3320]/70 leading-normal mt-1">Download all your records as readable text or a PDF, or export and import a full system backup (JSON) if you clear your browser cache.</p>
             </div>
             <div className="flex flex-col gap-2 mt-4">
               <button
@@ -54,6 +69,28 @@ export default function Settings() {
               >
                 <Download className="w-4 h-4" /> Export All Data (Text)
               </button>
+              <div className="border-t border-[#4A3320]/10 my-2"></div>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={exportJSON}
+                  className="w-full py-2 bg-transparent border border-[#4A3320] hover:bg-[#4A3320]/10 text-[#4A3320] font-medium text-xs rounded-none transition-colors shadow-none flex items-center justify-center gap-2"
+                >
+                  <Download className="w-4 h-4" /> Export Backup
+                </button>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full py-2 bg-transparent border border-[#4A3320] hover:bg-[#4A3320]/10 text-[#4A3320] font-medium text-xs rounded-none transition-colors shadow-none flex items-center justify-center gap-2"
+                >
+                  <Upload className="w-4 h-4" /> Import Backup
+                </button>
+                <input
+                  type="file"
+                  accept=".json"
+                  className="hidden"
+                  ref={fileInputRef}
+                  onChange={handleFileUpload}
+                />
+              </div>
             </div>
           </div>
         </div>
